@@ -1,3 +1,11 @@
+<?php 
+
+session_start();
+//$user = $_SESSION['username'];
+$user = ['joe','biden']
+
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,11 +22,13 @@
     </head>
     <body>
         <div class="container site">
-           
-            <h1 class="text-logo">Votre historique de commande</h1>
+
+            <h1 class="text-logo">Historique de commande de <?php echo $user[0] ,' ', $user[1];?></h1>
 
             <?php
-				require 'connexion.php';
+
+
+				        require 'connexion.php';
 			 
                 echo '<nav>
                         <ul class="nav nav-pills" role="tablist">';
@@ -26,6 +36,8 @@
                 $db = connect();
                 $statement = $db->query('SELECT * FROM commande');
                 ?>
+
+
                 <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -67,6 +79,7 @@
 
                     echo '<td>' .$temp['nom_dessert'] . '</td>';
 
+                    //Check des chips
                     if ($item['chips_com']==1){
                       echo '<td><i class="fa fa-check" aria-hidden="true" ></i></td>';
                     }
@@ -77,9 +90,9 @@
                     
                     echo '<td>' .$item['date_heure_livraison_com'] . '</td>';
                     echo '<td width=340>';
-                      echo '<a class="btn btn-primary" href="update?id='. $item['id_com'] .'"><span class="bi-at"></span> Modifier</a>';
+                      echo '<a class="btn btn-primary" href="update.php?id='. $item['id_com'] .'"><span class="bi-at"></span> Modifier</a>';
                       echo' ';
-                      echo '<a class="btn btn-danger" href="delete.php?id='. $item['id_com'] .'&amp;type=mail"><span class="bi-x"></span> Supprimer</a>';
+                      echo '<a class="btn btn-danger" href="delete.php?id='. $item['id_com'] .'"><span class="bi-x"></span> Supprimer</a>';
                     echo'</td>';
                   echo'</tr> ';
                 }
