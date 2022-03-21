@@ -10,6 +10,7 @@
         <link href='http://fonts.googleapis.com/css?family=Holtwood+One+SC' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     </head>
     <body>
         <div class="container site">
@@ -43,10 +44,37 @@
                 ORDER BY date_heure_com DESC');
                 while($item = $statement->fetch()){
                     echo '<tr>';
-                    echo '<td>' .$item['fk_sandwich_id'] . '</td>';
-                    echo '<td>' .$item['fk_boisson_id'] . '</td>';
-                    echo '<td>' .$item['fk_dessert_id'] . '</td>';
-                    echo '<td>' .$item['chips_com'] . '</td>';
+
+                    //Nom du sandwich
+                    $statement2 = $db->prepare('SELECT nom_sandwich FROM sandwich where id_sandwich=?');
+                    $statement2->execute(array($item['fk_sandwich_id']));
+                    $temp = $statement2 ->fetch();
+
+                    echo '<td>' .$temp['nom_sandwich'] . '</td>';
+
+                    //Nom de la boisson
+                    $statement2 = $db->prepare('SELECT nom_boisson FROM boisson where id_boisson=?');
+                    $statement2->execute(array($item['fk_boisson_id']));
+                    $temp = $statement2 ->fetch();
+
+                    echo '<td>' .$temp['nom_boisson'] . '</td>';
+
+
+                    //Nom du dessert
+                    $statement2 = $db->prepare('SELECT nom_dessert FROM dessert where id_dessert=?');
+                    $statement2->execute(array($item['fk_dessert_id']));
+                    $temp = $statement2 ->fetch();
+
+                    echo '<td>' .$temp['nom_dessert'] . '</td>';
+
+                    if ($item['chips_com']==1){
+                      echo '<td><i class="fa fa-check" aria-hidden="true" ></i></td>';
+                    }
+                    else{
+                      echo '<td>X</td>';
+                    }
+
+                    
                     echo '<td>' .$item['date_heure_livraison_com'] . '</td>';
                     echo '<td width=340>';
                       echo '<a class="btn btn-primary" href="update?id='. $item['id_com'] .'"><span class="bi-at"></span> Modifier</a>';
