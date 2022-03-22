@@ -9,12 +9,11 @@ if (!empty($_GET['id'])){
 
 #Récupération du formulaire
 if(!empty($_POST)) {
-
-    session_start();
     $sandwich = checkInput($_POST['sandwich']);
     $boisson = checkInput($_POST['boisson']);
     $dessert = checkInput($_POST['dessert']);
-    $_SESSION['chips']=$_POST['chips'];
+    $heure = $_POST['heure'];
+    $heure = $heure . ':00';
 
     $isSuccess= true;
 
@@ -40,7 +39,7 @@ if(!empty($_POST)) {
             WHERE id_com=?");
             $statement->execute(array($sandwich,$boisson,$dessert,$chips,$id));
             $db = null;
-            header("Location: historique.php");
+            #header("Location: historique.php");
         }
         else{
             echo'<h1><strong>Impossible de modifier la commande (commande déjà passée) </strong></h1>'; 
@@ -55,6 +54,11 @@ else{
     $statement->execute(array($id));
     $item = $statement->fetch();
     $date = $item['date_heure_livraison_com'];
+
+    $temp = str_split($date, 2);
+
+    var_dump($temp);
+
     $id_sandwich = $item['fk_sandwich_id'];
     $id_boisson = $item['fk_boisson_id'];
     $id_dessert = $item['fk_dessert_id'];
@@ -157,6 +161,11 @@ function checkInput($var) {
                 
                 echo '<label for="chips">Chips</label>';
                 $db = null;?>
+            </div>
+            <input type="time" id="heure" name="heure" value="<?php echo $heure;?>">
+            <div>
+
+
             </div>
 
             <button type='submit' class='btn btn-sucess'>Envoyer</button>
