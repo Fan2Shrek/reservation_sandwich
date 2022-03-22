@@ -13,7 +13,6 @@ if(!empty($_POST)) {
     $boisson = checkInput($_POST['boisson']);
     $dessert = checkInput($_POST['dessert']);
     $heure = $_POST['heure'];
-    $heure = $heure . ':00';
 
     $isSuccess= true;
 
@@ -35,11 +34,11 @@ if(!empty($_POST)) {
         $check_date = ($date > date('Y-m-d H:i:s')) ? True: False;
 
         if ($check_date){
-            $statement = $db->prepare("UPDATE commande set fk_sandwich_id=?, fk_boisson_id =?, fk_dessert_id =?, chips_com=? 
+            $statement = $db->prepare("UPDATE commande set fk_sandwich_id=?, fk_boisson_id =?, fk_dessert_id =?, chips_com=? , date_heure_livraison_com=?
             WHERE id_com=?");
-            $statement->execute(array($sandwich,$boisson,$dessert,$chips,$id));
+            $statement->execute(array($sandwich,$boisson,$dessert,$chips,$heure,$id));
             $db = null;
-            #header("Location: historique.php");
+            header("Location: historique.php");
         }
         else{
             echo'<h1><strong>Impossible de modifier la commande (commande déjà passée) </strong></h1>'; 
@@ -54,10 +53,8 @@ else{
     $statement->execute(array($id));
     $item = $statement->fetch();
     $date = $item['date_heure_livraison_com'];
-
-    $temp = str_split($date, 2);
-
-    var_dump($temp);
+    $heure = $date;
+    $heure= str_replace(" ", "T", $heure);
 
     $id_sandwich = $item['fk_sandwich_id'];
     $id_boisson = $item['fk_boisson_id'];
@@ -162,8 +159,8 @@ function checkInput($var) {
                 echo '<label for="chips">Chips</label>';
                 $db = null;?>
             </div>
-            <input type="time" id="heure" name="heure" value="<?php echo $heure;?>">
-            <div>
+            <input type="datetime-local" id="heure" name="heure" value="<?php echo $heure;?>">
+            <div>   
 
 
             </div>

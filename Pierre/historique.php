@@ -2,7 +2,64 @@
 
 session_start();
 //$user = $_SESSION['username'];
-$user = ['joe','biden']
+$user = ['joe','biden'];
+//$user_id = $_SESSION['user_id'];
+$user_id = 1;
+$filtre = False;
+
+require_once 'connexion.php';
+
+$db = connect();
+$statement = $db->prepare('SELECT count(*) FROM historique WHERE fk_user_id=?');
+$statement -> execute(array($user_id));
+$item = $statement->fetch();
+
+//Si l'utilisateur a déjà fait une recherche
+if($item['0']==1){
+  $statement = $db->prepare('SELECT dateDebut_hist, dateFin_hist FROM historique WHERE fk_user_id=?');
+  $statement -> execute(array($user_id));
+  $item = $statement->fetch();
+  $date_avant = $item['dateDebut_hist'];
+  $date_apres = $item['dateFin_hist'];
+}
+
+
+//En cas de filtre
+if (!empty($_POST['heure_avant'])){
+  $filtre = True;
+  $heure_avant = $_POST['heure_avant'];
+  $heure_apres = $_POST['heure_apres'];
+  header("Refresh:0");
+
+  if ($heure_apres < $heure_avant ){
+    $heure_apres = $heure_avant;
+  }
+  if ($heure_avant > $heure_apres ){
+    $heure_avant = $heure_apres;
+  }
+
+  //Suppression des anciennes infos
+  $db = connect();
+  $statement = $db->prepare('DELETE FROM historique where fk_user_id=?');
+  $statement -> execute(array($user_id));
+
+  //Historisation des dates
+  $statement = $db->prepare('INSERT INTO historique (dateDebut_hist, dateFin_hist, fk_user_id) VALUES (?,?,?)');
+  $statement-> execute (array($heure_avant,$heure_apres,$user_id));
+
+  //Mise à jour de la table
+  $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ?');
+  $statement-> execute (array($heure_avant,$heure_apres));
+}
+
+//Si bouton reinitialiser est cliqué
+if (!empty($_POST['reset'])){
+  if ($_POST['reset']==1){
+    $filtre = False;
+    $heure_avant = '';
+    $heure_apres = '';
+  }
+}
 
 ?>
 
@@ -25,18 +82,19 @@ $user = ['joe','biden']
 
             <h1 class="text-logo">Historique de commande de <?php echo $user[0] ,' ', $user[1];?></h1>
 
-            <?php
-
-
-				        require 'connexion.php';
-			 
-                echo '<nav>
-                        <ul class="nav nav-pills" role="tablist">';
-
-                $db = connect();
-                $statement = $db->query('SELECT * FROM commande');
-                ?>
-
+            <form class="form" action="" role="form" method="post">
+              <h3>Filtres : </h3>
+              <input type="date" id="heure_avant" name="heure_avant" value="<?php echo $date_avant;?>">
+              <input type="date" id="heure_apres" name="heure_apres" value="<?php echo $date_apres;?>">
+              <button type="submit" class="btn btn-primary">Filtrer</button>
+            </form>
+            <form class="form" action="delete.php" role="form" method="post">
+                <input type="hidden" name="reset" value="1"/>
+                <div class="form-actions">
+                <button type="submit" class="btn btn-warning">Réinitialiser</button>
+                </div>
+            </form> 
+            
 
                 <table class="table table-striped table-bordered">
                 <thead>
@@ -51,9 +109,15 @@ $user = ['joe','biden']
               </thead>
               <tbody>
                 <?php
-                $statement=$db->query('SELECT *
-                FROM commande 
-                ORDER BY date_heure_com DESC');
+                require_once 'connexion.php';
+
+                $db = connect();
+
+                if (!$filtre){
+                  $statement=$db->query('SELECT *
+                  FROM commande 
+                  ORDER BY date_heure_com DESC');
+                }
                 while($item = $statement->fetch()){
                     echo '<tr>';
 
