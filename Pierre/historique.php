@@ -6,6 +6,7 @@ $user = ['joe','biden'];
 //$user_id = $_SESSION['user_id'];
 $user_id = 1;
 $filtre = False;
+$heure_apres = $heure_avant ='';
 
 require_once 'connexion.php';
 
@@ -29,13 +30,15 @@ if (!empty($_POST['heure_avant'])){
   $filtre = True;
   $heure_avant = $_POST['heure_avant'];
   $heure_apres = $_POST['heure_apres'];
-  header("Refresh:0");
 
-  if ($heure_apres < $heure_avant ){
-    $heure_apres = $heure_avant;
+  $h1 = $heure_avant;
+  $h2 = $heure_apres;
+
+  if ($h2 < $h1 ){
+    $h2 = $h1;
   }
-  if ($heure_avant > $heure_apres ){
-    $heure_avant = $heure_apres;
+  if ($h1 > $h2 ){
+    $h1 = $h2;
   }
 
   //Suppression des anciennes infos
@@ -50,16 +53,7 @@ if (!empty($_POST['heure_avant'])){
   //Mise à jour de la table
   $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ?');
   $statement-> execute (array($heure_avant,$heure_apres));
-}
-
-//Si bouton reinitialiser est cliqué
-if (!empty($_POST['reset'])){
-  if ($_POST['reset']==1){
-    $filtre = False;
-    $heure_avant = '';
-    $heure_apres = '';
-  }
-}
+} 
 
 ?>
 
@@ -71,22 +65,23 @@ if (!empty($_POST['reset'])){
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link href='http://fonts.googleapis.com/css?family=Holtwood+One+SC' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     </head>
+
     <body>
         <div class="container site">
 
             <h1 class="text-logo">Historique de commande de <?php echo $user[0] ,' ', $user[1];?></h1>
 
-            <form class="form" action="" role="form" method="post">
+            <form class="form" action="" role="form" method="post" id="filtre-form">
               <h3>Filtres : </h3>
-              <input type="date" id="heure_avant" name="heure_avant" value="<?php echo $date_avant;?>">
-              <input type="date" id="heure_apres" name="heure_apres" value="<?php echo $date_apres;?>">
-              <button type="submit" class="btn btn-primary">Filtrer</button>
+              <input type="date" id="heure_avant" name="heure_avant" value="<?php echo $h1;?>">
+              <input type="date" id="heure_apres" name="heure_apres" value="<?php echo $h2;?>">
+              <button type="submit" class="btn btn-primary" id='filtre-btn'>Filtrer</button>
             </form>
             <form class="form" action="delete.php" role="form" method="post">
                 <input type="hidden" name="reset" value="1"/>
