@@ -20,19 +20,16 @@ if($item['0']==1){
   $statement = $db->prepare('SELECT dateDebut_hist, dateFin_hist FROM historique WHERE fk_user_id=?');
   $statement -> execute(array($user_id));
   $item = $statement->fetch();
-  $date_avant = $item['dateDebut_hist'];
-  $date_apres = $item['dateFin_hist'];
+  $h1 = $item['dateDebut_hist'];
+  $h2 = $item['dateFin_hist'];
 }
 
 
 //En cas de filtre
 if (!empty($_POST['heure_avant'])){
   $filtre = True;
-  $heure_avant = $_POST['heure_avant'];
-  $heure_apres = $_POST['heure_apres'];
-
-  $h1 = $heure_avant;
-  $h2 = $heure_apres;
+  $h1 = $_POST['heure_avant'];
+  $h2 = $_POST['heure_apres'];
 
   if ($h2 < $h1 ){
     $h2 = $h1;
@@ -48,11 +45,11 @@ if (!empty($_POST['heure_avant'])){
 
   //Historisation des dates
   $statement = $db->prepare('INSERT INTO historique (dateDebut_hist, dateFin_hist, fk_user_id) VALUES (?,?,?)');
-  $statement-> execute (array($heure_avant,$heure_apres,$user_id));
+  $statement-> execute (array($h1,$h2,$user_id));
 
   //Mise à jour de la table
   $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ?');
-  $statement-> execute (array($heure_avant,$heure_apres));
+  $statement-> execute (array($h1,$h2));
 } 
 
 ?>
