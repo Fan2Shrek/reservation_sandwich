@@ -1,0 +1,149 @@
+/* NAVBAR */
+
+#navbar nav
+{
+    background-color: #19253d;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+/* logo et texte du logo */
+
+.logo img
+{
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.logo p
+{
+    
+    font-size: 15px;
+    padding-top: 21px;
+}
+
+/* lien et bouton (responsive) */
+
+.lien ul a
+{
+    color: #fff;
+    font-size: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.lien ul a:hover
+{
+    font-size: 18px;
+}
+
+.navbar-toggle
+{
+    margin-top: 14px;
+}
+
+/*BODY*/
+
+#reservation {
+    padding-top: 150px;
+    margin-left: 40%;
+    margin-right: auto;
+    line-height: 50px;
+}
+
+.icon_res {
+    height: 35px !important;
+    width: auto;
+}
+
+.btn_res {
+    background-color: #19253d;
+    color: white;
+    width: 150px;
+    height: 50px;
+    border-radius: 5%;
+
+}
+
+.btn_res:hover{
+    color: #19253d !important;
+    background-color: #fff !important;
+}
+
+
+/* FOOTER */
+
+#footer
+{
+    margin-top: 50px;
+    background-color: #19253d;  
+    padding-top: 25px;
+}
+
+.pfooter p, a
+{
+    color: #fff !important;
+}
+
+.pfooter a:hover
+{
+    color: #fff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CONNEXION */
+
+#login
+{
+    padding-top: 100px;
+    padding-bottom: 25px;
+}
+
+.hConnection
+{
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+.red
+{
+    color: red;
+}
+
+.messageError
+{
+    color: red;
+    font-family: italic;
+}
+
+
+
+.txtInsciption
+{
+    text-align: center;
+    padding-top: 40px;
+}
+
+.btnInscription
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+}
