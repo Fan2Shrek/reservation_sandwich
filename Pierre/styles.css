@@ -1,0 +1,62 @@
+/* NAVBAR */
+
+#navbar nav
+{
+    background-color: #19253d;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}   
+
+/* MAIN */
+
+#reset-btn{
+    position: relative;
+    left: 155px;
+    bottom: -1px;
+}
+
+#filtre-btn{
+    position: relative;
+    top: 35px;
+    left: 3px;
+}
+
+#filtre-btn, #reset-btn, #filtre-form input{
+    width: 150px;
+}
+
+#filtre-btn, #reset-btn{
+    height: 34px;
+}
+
+#filtres{
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+table{
+    margin-top: 20px;
+}
+
+#titre-table{
+    margin-top: 150px;
+}
+
+/* FOOTER */
+
+#footer
+{
+    background-color: #19253d;  
+    padding-top: 25px;
+}
+
+.pfooter p, a
+{
+    color: #fff!important;
+}
+
+.pfooter a:hover
+{
+    color: #fff!important;
+}
+

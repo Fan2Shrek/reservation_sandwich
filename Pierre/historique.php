@@ -2,11 +2,23 @@
 
 session_start();
 //$user = $_SESSION['username'];
-$user = ['joe','biden'];
 //$user_id = $_SESSION['user_id'];
+
+
+$user = ['joe','biden'];
 $user_id = 1;
+
+
 $filtre = False;
 $heure_apres = $heure_avant ='';
+
+function checkInput($var) {
+  $var = trim($var);
+  $var = stripslashes($var);
+  $var = htmlspecialchars($var);
+  return $var;
+}
+
 
 require_once 'connexion.php';
 
@@ -17,11 +29,14 @@ $item = $statement->fetch();
 
 //Si l'utilisateur a déjà fait une recherche
 if($item['0']==1){
+  $filtre = true;
   $statement = $db->prepare('SELECT dateDebut_hist, dateFin_hist FROM historique WHERE fk_user_id=?');
   $statement -> execute(array($user_id));
   $item = $statement->fetch();
   $h1 = $item['dateDebut_hist'];
   $h2 = $item['dateFin_hist'];
+  $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ? and fk_user_id = ? order by date_heure_livraison_com DESC');
+  $statement-> execute (array($h1,$h2,$user_id));
 }
 
 
@@ -48,44 +63,83 @@ if (!empty($_POST['heure_avant'])){
   $statement-> execute (array($h1,$h2,$user_id));
 
   //Mise à jour de la table
-  $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ?');
-  $statement-> execute (array($h1,$h2));
+  $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ? and fk_user_id = ? order by date_heure_livraison_com DESC');
+  $statement-> execute (array($h1,$h2,$user_id));
 } 
+
+if (!empty($_POST['id_commande_supp'])){
+  $id = checkInput($_POST['id_commande_supp']);
+  $db= connect();
+  $statement = $db->prepare('UPDATE commande SET annule_com = 1 WHERE id_com=?');
+  $statement->execute(array($id));
+}
+
+if (!empty($_POST['reset-test'])){
+  $statement = $db->query('SELECT date_heure_livraison_com FROM commande order by date_heure_livraison_com');
+  $res = $statement->fetch();
+  // On retire 1 jour
+  $res1 = date('Y-m-d', strtotime($res[0]. ' - 1 days')); 
+
+  $statement2 = $db->query('SELECT date_heure_livraison_com FROM commande order by date_heure_livraison_com DESC');
+  $res = $statement2->fetch();
+  //On ajoute un jour
+  $res2 = date('Y-m-d', strtotime($res[0]. ' + 1 days')); 
+  
+
+  //Suppression des anciennes infos
+  $db = connect();
+  $statement = $db->prepare('DELETE FROM historique where fk_user_id=?');
+  $statement -> execute(array($user_id));
+
+  //Historisation des dates
+  $statement = $db->prepare('INSERT INTO historique (dateDebut_hist, dateFin_hist, fk_user_id) VALUES (?,?,?)');
+  $statement-> execute (array($res1,$res2,$user_id));
+
+  //Mise à jour de la table
+  $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ? and fk_user_id = ? order by date_heure_livraison_com DESC');
+  $statement-> execute (array($h1,$h2,$user_id));
+  header('refresh:0');
+}
 
 ?>
 
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Votre historique de commande</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="icon" href="images/logo.png">
+        <title>Historique de réservation de Sandwichs | Lycée privé Saint-Vincent</title>
+        <meta charset="utf-8">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+        <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+        <script src='script.js'></script>
     </head>
 
     <body>
+      <?php require 'header.php' ?>
         <div class="container site">
 
-            <h1 class="text-logo">Historique de commande de <?php echo $user[0] ,' ', $user[1];?></h1>
+            <h1 class="text-logo" id ='titre-table'>Historique de commande de <?php echo $user[0] ,' ', $user[1];?> : </h1>
 
-            <form class="form" action="" role="form" method="post" id="filtre-form">
-              <h3>Filtres : </h3>
-              <input type="date" id="heure_avant" name="heure_avant" value="<?php echo $h1;?>">
-              <input type="date" id="heure_apres" name="heure_apres" value="<?php echo $h2;?>">
-              <button type="submit" class="btn btn-primary" id='filtre-btn'>Filtrer</button>
-            </form>
-            <form class="form" action="delete.php" role="form" method="post">
-                <input type="hidden" name="reset" value="1"/>
-                <div class="form-actions">
-                <button type="submit" class="btn btn-warning">Réinitialiser</button>
-                </div>
-            </form> 
+            <div id='filtres'>
+              <form class="form" action="" role="form" method="post" id="filtre-form">
+                <h3>Filtres : </h3>
+                <input type="date" id="heure_avant" name="heure_avant" value="<?php echo $h1;?>">
+                <input type="date" id="heure_apres" name="heure_apres" value="<?php echo $h2;?>">
+                <button type="submit" class="btn btn-primary" id='filtre-btn'>Filtrer</button>
+              </form>
+              <form class="form" action="" role="form" method="post">
+                  <input type="hidden" name="reset-test" value="1">
+                  <div class="form-actions">
+                  <button type="submit" class="btn btn-warning" id='reset-btn'>Réinitialiser</button>
+                  </div>
+              </form> 
+            </div>
             
 
                 <table class="table table-striped table-bordered">
@@ -146,16 +200,49 @@ if (!empty($_POST['heure_avant'])){
                     
                     echo '<td>' .$item['date_heure_livraison_com'] . '</td>';
                     echo '<td width=340>';
+                    $check_date = ($item['date_heure_livraison_com'] > date('Y-m-d H:i:s')) ? True: False;
+                    if ($item['annule_com']==1){
+                      echo 'Actions impossible sur une commande annulée';
+                    }
+                    else if (!$check_date){
+                        echo 'Actions impossible sur une commande déja passée';
+                    } 
+                    else if ($check_date){
                       echo '<a class="btn btn-primary" href="update.php?id='. $item['id_com'] .'"><span class="bi-at"></span> Modifier</a>';
                       echo' ';
-                      echo '<a class="btn btn-danger" href="delete.php?id='. $item['id_com'] .'"><span class="bi-x"></span> Supprimer</a>';
+                      echo "<a class='btn btn-danger' data-toggle='modal' data-target='#modal". $item['id_com'] ."'><span class='bi-x'></span> Annuler</a>
+                      <div class='modal fade' id='modal".$item['id_com'] ."'> 
+                                <div class='modal-dialog'>
+                                    <div class='modal-content'>
+                                        <div class='modal-header'>
+                                            <button type='button' class='close' data-dismiss='modal'>x</button>
+                                            <h5 class='modal-title'>Annuler la commande</h5>        
+                                            </div>
+                                        <div class='modal-body'>          
+                                            <p>Voulez-vous vraiment annuler la commande</p>
+                                        </div>
+                                        <div class='modal-footer'>
+                                            <form class='form' action='' role='form' method='post'>
+                                              <input type='hidden' name='id_commande_supp' value=" .$item['id_com']."/>
+                                              <a type='button' href='#' class='btn btn-primary' data-dismiss='modal'>Non</a>
+                                              <button type='submit' class='btn btn-danger' >Oui</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>";
+                    }
+
+
                     echo'</td>';
                   echo'</tr> ';
                 }
               echo "                  
                 </tbody>
               </table>
-        </div>
+        </div>";
+
+        require 'footer.php';
+        echo"
     </body>
 </html>";
 ?>
