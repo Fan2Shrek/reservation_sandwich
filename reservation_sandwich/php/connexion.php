@@ -4,7 +4,7 @@ $connection = null;
 
 function connect(){
 
-    require_once 'config.php';
+    require 'php/config.php';
 
     try{
         $connection = new PDO("mysql:host=". $dbHost . ";dbname=" . $dbName, $dbUser, $dbUserPw);

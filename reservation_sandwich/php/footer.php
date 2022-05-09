@@ -32,7 +32,7 @@
             <div class="col-lg-2 col-lg-offset-1 col-md-5 col-md-offset-1 col-sm-5 col-sm-offset-1 col-xs-11 col-xs-offset-1">
                 <div class="pfooter">
                     <p>Accès rapide :</p><br>
-                    <p><a href="index.php">Acceuil</a></p>
+                    <p><a href="index.php">Accueil</a></p>
                     <p><a href="historique.php">Vos commandes</a></p><br>
                 </div>
             </div>
