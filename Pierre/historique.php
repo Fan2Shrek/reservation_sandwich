@@ -10,7 +10,7 @@ $user_id = 1;
 
 
 $filtre = False;
-$heure_apres = $heure_avant ='';
+$heure_apres = $heure_avant = $heure ='';
 
 function checkInput($var) {
   $var = trim($var);
@@ -99,6 +99,27 @@ if (!empty($_POST['reset-test'])){
   $statement = $db->prepare('SELECT * FROM `commande` WHERE date_heure_livraison_com BETWEEN ? and ? and fk_user_id = ? order by date_heure_livraison_com DESC');
   $statement-> execute (array($h1,$h2,$user_id));
   header('refresh:0');
+}
+
+if (!empty($_POST['id_commande_modif'])){
+  $isSuccess = false;
+  $id = $_POST['id_commande_modif'];
+  $nouvelle_heure = $_POST['nouvelle_heure'];
+  $auj = array(date('Y-m-d'),date('H:i'));
+  if ($nouvelle_heure < $auj[0]){
+    $isSuccess= false;
+  }
+  else if ($auj[1] > date("H:i",30600) and $auj[0] == date('Y-m-d',strtotime($nouvelle_heure))){
+      $isSuccess= false;
+  }
+  else if (date("l",strtotime($nouvelle_heure)) != 'Saturday' and date("l",strtotime($nouvelle_heure)) != 'Sunday'){
+    $statement = $db->prepare("UPDATE commande set date_heure_livraison_com=? WHERE id_com=?");
+    $statement->execute(array($nouvelle_heure,$id));
+    header('Refresh: 0');
+  }
+  else{
+      $isSuccess= false;
+  }
 }
 
 ?>
@@ -208,8 +229,33 @@ if (!empty($_POST['reset-test'])){
                         echo 'Actions impossible sur une commande déja passée';
                     } 
                     else if ($check_date){
-                      echo '<a class="btn btn-primary" href="update.php?id='. $item['id_com'] .'"><span class="bi-at"></span> Modifier</a>';
+                      echo "<a class='btn btn-primary' data-toggle='modal' data-target='#modal_update". $item['id_com'] ."'><span class='bi-at'></span> Modifier</a>";
                       echo' ';
+                      echo "
+                      <div class='modal fade' id='modal_update".$item['id_com'] ."'> 
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+                                <div class='modal-header'>
+                                    <button type='button' class='close' data-dismiss='modal'>x</button>
+                                    <h5 class='modal-title'>Modifier la commande</h5>        
+                                </div>
+                                <div class='modal-body'>          
+                                    <p>Selectionez la nouvelle date :</p>
+                                    <form class='form' action='' role='form' method='post'>
+                                      <input type='hidden' name='id_commande_modif' value=" .$item['id_com'].">
+                                      <input type='datetime-local' id='heure' name='nouvelle_heure' value='". str_replace(" ", "T", $item['date_heure_livraison_com']) ."'>
+                                </div>
+                                <div class='modal-footer'>
+                                      <a type='button' href='#' class='btn btn-primary' data-dismiss='modal'>Non</a>
+                                      <button type='submit' class='btn btn-danger' >Changer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                      </div>";
+
+                      echo' ';
+
                       echo "<a class='btn btn-danger' data-toggle='modal' data-target='#modal". $item['id_com'] ."'><span class='bi-x'></span> Annuler</a>
                       <div class='modal fade' id='modal".$item['id_com'] ."'> 
                                 <div class='modal-dialog'>
