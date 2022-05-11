@@ -2,7 +2,7 @@
 
     <!-- navbar -->
 
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -25,9 +25,23 @@
                         <a href=""></a>
                         <a href="index.php">Accueil</a>
                     </ul>
-                    <ul class="nav navbar-nav pull-right"><br>
+                    <?php
+                    
+                    
+                    if (!$_SESSION['ifco']){
+                        echo '<ul class="nav navbar-nav pull-right"><br>
                         <a href="login.php">Connexion</a>
-                    </ul>
+                        </ul>';
+                    }
+                    else{
+                        echo '
+                        <ul class="nav navbar-nav pull-right"><br>
+                        <a href="bvEleve.php">'.$_SESSION['username'][0].' ' .$_SESSION['username'][1].'</a>
+                        </ul>';
+                    }
+                                       
+                    ?>
+                    
                 </div>
             </div>
         </div>

@@ -1,13 +1,13 @@
 <?php 
 
 session_start();
-//$user = $_SESSION['username'];
-//$user_id = $_SESSION['user_id'];
 
+if (!$_SESSION['ifco']){
+  header('Location: login.php');
+}
 
-$user = ['joe','biden'];
-$user_id = 1;
-
+$user = $_SESSION['username'];
+$user_id = $_SESSION['user_id'];
 
 $filtre = False;
 $heure_apres = $heure_avant = $heure ='';
@@ -20,7 +20,7 @@ function checkInput($var) {
 }
 
 
-require_once 'connexion.php';
+require_once 'php/connexion.php';
 
 $db = connect();
 $statement = $db->prepare('SELECT count(*) FROM historique WHERE fk_user_id=?');
@@ -136,13 +136,13 @@ if (!empty($_POST['id_commande_modif'])){
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
 
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
         <script src='script.js'></script>
     </head>
 
     <body>
-      <?php require 'header.php' ?>
+      <?php require 'php/header.php' ?>
         <div class="container site">
 
             <h1 class="text-logo" id ='titre-table'>Historique de commande de <?php echo $user[0] ,' ', $user[1];?> : </h1>
@@ -176,7 +176,7 @@ if (!empty($_POST['id_commande_modif'])){
               </thead>
               <tbody>
                 <?php
-                require_once 'connexion.php';
+                require_once 'php/connexion.php';
 
                 $db = connect();
 
@@ -287,7 +287,7 @@ if (!empty($_POST['id_commande_modif'])){
               </table>
         </div>";
 
-        require 'footer.php';
+        require 'php/footer.php';
         echo"
     </body>
 </html>";

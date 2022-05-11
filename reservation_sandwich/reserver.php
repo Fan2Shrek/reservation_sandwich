@@ -1,8 +1,12 @@
 <?php
 
 session_start();
-//$user_id = $_SESSION['user_id'];
-$user_id = 1;
+
+if (!$_SESSION['ifco']){
+    header('Location: login.php');
+}
+
+$user_id = $_SESSION['user_id'];
 
 
 require_once 'php/connexion.php';
