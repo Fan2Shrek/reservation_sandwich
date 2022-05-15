@@ -4,12 +4,7 @@
 {
     background-color: #19253d;
     padding-bottom: 20px;
-    padding-top: 20px;
-    width: 102%;
-    position: absolute;
-    bottom: 83%;
-    right: 0%;
-    border-radius: 0;
+    padding-top: 20px
 }   
 
 /* logo et texte du logo */
@@ -128,6 +123,7 @@
 {
     text-align: center;
     padding-bottom: 25px;
+    padding-top: 25px;
 }
 
 .hIndex2 a
@@ -140,22 +136,38 @@
     font-size: 20px;
 }
 
+.hIndex0
+{
+    color: #000 !important;
+}
+
+.hIndex0:hover
+{
+    font-size: 20px;
+}
+
 .txtIndex
 {
     padding-bottom: 25px;
+    padding-top: 100px;
+    text-align: center;
 }
 
-.txtIndex2
+.pres_img
 {
-    padding-top: 25px;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    padding-top: 50px;
     padding-bottom: 25px;
 }
 
-.pres_img{
-    width: 450px;
-    height: auto;
-    margin-bottom: 10px;
+.inscrivez a
+{
+    color: #000!important;
 }
+
 
 
 
@@ -194,6 +206,11 @@
     padding-bottom: 10px;
 }
 
+#loginform
+{
+    padding-bottom: 25px;
+}
+
 /* partie 2 de la page */
 
 .txtInscription
@@ -224,20 +241,10 @@
     color: #19253d;
 }
 
-.messageInscription
+.Inscrit
 {
-    color: #19253d;
-    padding-top: 40px;
-}
-
-.messageInscription a
-{
-    color: #19253d;
-}
-
-.messageInscription a:hover
-{
-    font-size: 20px;
+    color: red;
+    font-weight: bold;
 }
 
 
@@ -248,8 +255,8 @@
 
 #updateAccueil
 {
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding-top: 150px;
+    padding-bottom: 45px;
     color: #19253d;
 }
 
@@ -277,7 +284,7 @@
 
 .choix
 {
-    padding-top: 25px;
+    padding-top: 150px;
     padding-bottom: 25px;
     color: #19253d;
 }
@@ -295,11 +302,19 @@
     padding-bottom: 10px;
 }
 
+a#retour-btn{
+    margin-bottom: 150px !important;
+}
+
+
+
+
+
 /*PAGE RESERVATION*/
 
 #reservation {
     padding-top: 150px;
-    margin-left: 40%;
+    margin-left: auto;
     margin-right: auto;
     line-height: 50px;
 }

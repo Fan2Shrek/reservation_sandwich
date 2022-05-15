@@ -27,7 +27,7 @@ $statement = $db->prepare('SELECT count(*) FROM historique WHERE fk_user_id=?');
 $statement -> execute(array($user_id));
 $item = $statement->fetch();
 
-//Si l'utilisateur a déjà fait une recherche
+//Si l'utilisateur a déjà fait une rechercher
 if($item['0']==1){
   $filtre = true;
   $statement = $db->prepare('SELECT dateDebut_hist, dateFin_hist FROM historique WHERE fk_user_id=?');
@@ -181,9 +181,8 @@ if (!empty($_POST['id_commande_modif'])){
                 $db = connect();
 
                 if (!$filtre){
-                  $statement=$db->query('SELECT *
-                  FROM commande 
-                  ORDER BY date_heure_com DESC');
+                    $statement = $db->prepare('SELECT * FROM `commande` WHERE  fk_user_id = ? order by date_heure_livraison_com DESC');
+                    $statement-> execute (array($user_id));
                 }
                 while($item = $statement->fetch()){
                     echo '<tr>';
@@ -285,6 +284,7 @@ if (!empty($_POST['id_commande_modif'])){
               echo "                  
                 </tbody>
               </table>
+              <a id='retour-btn2' href='bvEleve.php' class='btn btn-primary'>Retour</a>
         </div>";
 
         require 'php/footer.php';

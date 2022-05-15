@@ -12,7 +12,16 @@
                 </button>
 
                 <div class="logo">
-                    <img src="images/logo.png" class="navbar-brand">
+                <?php 
+                    
+                    if (file_exists('images/logo.png')){
+                        echo '<img src="images/logo.png" class="navbar-brand">';
+                    }    
+                    else{
+                        echo '<img src="../images/logo.png" class="navbar-brand">';
+                    }                    
+                    
+                    ?>
                     <p class="navbar-brand">Lycée Saint-Vincent</p>
                 </div>
             </div>
@@ -27,6 +36,8 @@
                     </ul>
                     <?php
                     
+                    
+                    session_start();
                     
                     if (!$_SESSION['ifco']){
                         echo '<ul class="nav navbar-nav pull-right"><br>

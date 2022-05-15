@@ -16,12 +16,12 @@ if (!$_SESSION['ifco']){
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
         
         <!-- section accès administrateur -->
-        <?php require 'header.php'?>    
+        <?php require 'php/header.php'?>    
         <section class="choix">
             <div class="container">
                 <div class="row">
@@ -43,7 +43,7 @@ if (!$_SESSION['ifco']){
                                 
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="thumbnailChoix">
-                                        <a class="thumbnail" href="alexia.php">
+                                        <a class="thumbnail" href="reserver.php">
                                             <img src="images/logo.png" alt="photosSectionAlexia">
                                             <h4 class="h4Choix">Réserver un sandwich</h4>
                                         </a>
@@ -54,7 +54,7 @@ if (!$_SESSION['ifco']){
 
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="thumbnailChoix">
-                                        <a class="thumbnail" href="pierre.php">
+                                        <a class="thumbnail" href="historique.php">
                                             <img src="images/logo.png" alt="photosSectionPierre">
                                             <h4 class="h4Choix">Voir l'historique de vos commandes</h4>
                                         </a>
@@ -65,13 +65,15 @@ if (!$_SESSION['ifco']){
                             
                             <!-- bouton retour -->
                             
-                            <a href="logout.php" class="btn btn-primary">Retour</a>
+                            <a id='retour-btn' href="logout.php" class="btn btn-primary">Retour</a>
+                            
+                            
                             
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+        <?php require 'php/footer.php' ?>
     </body>
 </html>

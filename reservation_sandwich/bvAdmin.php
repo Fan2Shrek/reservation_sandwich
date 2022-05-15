@@ -1,5 +1,7 @@
 <?php 
 
+/* connexion en tant qu'admin sinon redirection */
+
 session_start();
 
 if ($_SESSION['role']=='e' && $_SESSION['ifco']){
@@ -9,6 +11,8 @@ else if (!$_SESSION['ifco']){
     header('Location: login.php');
 }
 
+require 'php/header.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -16,11 +20,11 @@ else if (!$_SESSION['ifco']){
     <head>
         <link rel="icon" href="images/logo.png">
         <title>Accès administrateur | Lycée privé Saint-Vincent</title>
-        <meta charset="utf-8"/>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
         
@@ -58,7 +62,7 @@ else if (!$_SESSION['ifco']){
 
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="thumbnailChoix">
-                                        <a class="thumbnail" href="yannis.php">
+                                        <a class="thumbnail" href="admin/index.php">
                                             <img src="images/logo.png" alt="photosSectionYannis">
                                             <h4 class="h4Choix">Gérer les utilisateurs</h4>
                                         </a>
@@ -69,13 +73,21 @@ else if (!$_SESSION['ifco']){
                             
                             <!-- bouton retour -->
                             
-                            <a href="logout.php" class="btn btn-primary">Retour</a>
+                            <a id='retour-btn' href="logout.php" class="btn btn-primary">Retour</a>
                             
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        
+        <!-- footer -->
+        
+        <?php 
+        
+        require 'php/footer.php'; 
+        
+        ?>
         
     </body>
 </html>

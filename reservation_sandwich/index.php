@@ -1,6 +1,13 @@
 <?php
 
+/* garder la connexion */
+
 session_start();
+if (!isset($_SESSION['ifco']))
+{
+    $_SESSION['ifco']='';
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -63,7 +70,7 @@ session_start();
                         <!-- lien pour voir le planning en grand -->
                         
                         <div class="txtPlanning">                          
-                            <a href="planningCantine.php" type="button" class="btn btn-primary">Voir le planning de la cantine</a> 
+                            <a href="planningCantine.php" target='_blank' type="button" class="btn btn-primary">Voir le planning de la cantine</a> 
                         </div>
                     </div>
 
@@ -74,7 +81,7 @@ session_start();
                         
                             <?php 
 
-                            echo"<object data='docs/".$row['lien_pdf']."' width=300px height=185px type='application/pdf'></object";
+                            echo"<object data='".$row['lien_pdf']."' width=300px height=185px type='application/pdf'></object";
 
                             $db = null;
 
@@ -98,7 +105,7 @@ session_start();
                     
                     <div class="col-lg-6 col-md-12 col-sm-12">
                         <div class="txtIndex">
-                            <h4>Connectez-vous pour pouvoir réserver votre repas</h4>
+                            <h4><a href="login.php" class="hIndex0" >Connectez-vous</a> pour pouvoir réserver votre repas</h4>
                         </div>
                     </div>
                     
@@ -122,7 +129,7 @@ session_start();
                     <!-- texte partie 2 -->
                     
                     <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="txtIndex2">
+                        <div class="txtIndex">
                             <h4>... mais aussi pour gérer votre historique de commande !</h4>
                         </div>
                     </div>
@@ -132,7 +139,7 @@ session_start();
                 
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <h4 class="hIndex2">Vous êtes nouveau ? <a id='inscrivez' href="register.php">Inscrivez-vous</a> dès maintenant !</h4>
+                        <h4 class="hIndex2">Vous êtes nouveau ? <a href="register.php">Inscrivez-vous</a> dès maintenant !</h4>
                     </div>
                 </div>
             </div>

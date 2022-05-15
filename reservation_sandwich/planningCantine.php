@@ -1,6 +1,6 @@
 <?php
 
-require 'connexion.php';    
+require 'php/connexion.php';    
 
 /* select planning cantine et adffichage à 100% de sa hauteur et largeur */
 
@@ -12,7 +12,7 @@ $row = $statement -> fetch();
 
 echo"<object data='".$row['lien_pdf']."' width=100% height=100% type='application/pdf'></object";
 
-disconnect();
+$db = null;
 
 ?>
 
@@ -26,19 +26,23 @@ disconnect();
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
     
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="btnRetour">    
-                        <a href="index.php" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span>Retour</a>
+        <!-- section pdf -->
+        
+        <section id="pdfHTML">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="btnRetour">    
+                            <a href="index.php" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span>Retour</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         
     </body>
 </html>

@@ -1,14 +1,19 @@
 <?php
 
+/*connection admin */
+
 session_start();
 
-if ($_SESSION['role']=='e' && $_SESSION['ifco']){
+if ($_SESSION['role']=='e' && $_SESSION['ifco'])
+{
     header('Location: bvEleve.php');
 }
-else if (!$_SESSION['ifco']){
+else if (!$_SESSION['ifco'])
+{
     header('Location: login.php');
 }
-require 'connexion.php';
+
+require 'php/connexion.php';
 
 /* déclation des variables */
 
@@ -22,12 +27,6 @@ $db = connect();
 
 $statement = $db -> query("SELECT texte_accueil, lien_pdf FROM accueil WHERE id_accueil = 1");         
 $row = $statement -> fetch();
-
-
-/* pré-remplissage des champs */
-
-
-
 
 /* controle des champs */
 
@@ -100,7 +99,6 @@ if(!empty($_POST['texte_accueil']))
             $statement->execute(array($txt));
         }
 
-        $db = disconnect();
         header("Location: index.php");
     }    
 }
@@ -115,10 +113,16 @@ if(!empty($_POST['texte_accueil']))
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
        
+        <?php
+        
+        require 'php/header.php';    
+        
+        ?>
+        
         <section id="updateAccueil">
              <div class="container">
                 <div class="row">
@@ -127,7 +131,7 @@ if(!empty($_POST['texte_accueil']))
                         <!--- titre section-->
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <h1 class="hModif" >Modifier</h1>
+                            <h1 class="hModif">Modifier la page d'accueil</h1>
                         </div>
 
                         <!-- formulaire update -->
@@ -179,6 +183,14 @@ if(!empty($_POST['texte_accueil']))
                 </div>  
             </div>
         </section>
-            
+        
+        <!-- footer -->
+        
+        <?php
+        
+        require 'php/footer.php';    
+        
+        ?>
+        
     </body>
 </html>

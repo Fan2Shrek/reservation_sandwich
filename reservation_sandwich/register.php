@@ -2,27 +2,13 @@
 
 require('php/connexion.php');
 
-function isEmail ($var)
-{
-    return filter_var($var, FILTER_VALIDATE_EMAIL);
-}
-
-/* fonction qui fait un contrôle de sécurité */
-
-function verifyInput($var)
-{
-    $var = trim($var);
-    $var = stripslashes($var);
-    $var = htmlspecialchars($var);
-    return $var;
-}
-
 /* déclaration des variables php */
 
 $prenom_user = $nom_user = $email_user = $password_user = "";
 $role_user = "e";
-$active_user = "1";
-$prenomError = $nomError = $emailError = $passwordError = $emailExiste = "";
+$active_user = "0";
+$prenomError = $nomError = $emailError = $emailExiste = "";
+$pass = $passError = "";
 $isSuccess = false;
 
 /* contrôle des champs du formulaire */
@@ -39,32 +25,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if(empty($prenom_user))
     {
-        $prenomError = "Veuillez saisir votre prénom.";
+        $prenomError = "Veuillez saisir votre prénom";
         $isSuccess = false;
     }
 
     if(empty($nom_user))
     {
-        $nomError = "Veuillez saisir votre nom.";
+        $nomError = "Veuillez saisir votre nom";
         $isSuccess = false;
     }
 
     if(!isEmail($email_user))
     {
-        $emailError = "Veuillez saisir un e-mail valide.";
+        $emailError = "Veuillez saisir un e-mail valide";
         $isSuccess = false;
     }
 
-    if(empty($password_user))
+    /* mot de passe sous condition */
+    
+    if (preg_match('#^(?=.*[0-9])(?=.{8,50})(?=.*\W)#', $password_user))
     {
-        $passwordError = "Veuillez saisir un mot de passe."; 
+        $pass = "Mot de passe conforme";
+    }
+
+    else 
+    {
+        $passError = 'Mot de passe non conforme';
         $isSuccess = false;
-    } 
+    }
 
     /* insert et select dans la base de donnée */
 
     if($isSuccess) 
     {
+        $password = password_hash($password_user, PASSWORD_ARGON2I);
         $db = connect();
 
         $req = $db->prepare("SELECT COUNT(*) FROM utilisateur WHERE email_user = :email_user");
@@ -74,8 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         if($results[0] == 0)
         {
             $statement = $db->prepare("INSERT INTO utilisateur (role_user, email_user, password_user, nom_user, prenom_user, active_user) values (?, ?, ?, ?, ?, ?)");
-            $statement->execute(array($role_user, $email_user, $password_user, $nom_user, $prenom_user, $active_user));
+            $statement->execute(array($role_user, $email_user, $password, $nom_user, $prenom_user, $active_user));
             $db = null;
+            header('Location: login.php');
         }
         else
         {
@@ -167,30 +162,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                                     <!-- input password -->
 
                                     <div class="form-group">
-                                        <label for="password">Mot de passe <span class="red">*</span> :</label>
-                                        <input type="password" id="password" name="password" placeholder="Veuillez entrer votre mot de passe" class="form-control" value="<?php echo $password_user; ?>">
-                                        <p class="messageError"><?php echo $passwordError; ?></p>
+                                        <label for="password">Mot de passe (8 caractères, dont 1 chiffre et 1 caractère spécial) <span class="red">*</span> :</label>
+                                        <input type="password" id="password" name="password" placeholder="Veuillez entrer votre mot de passe" class="form-control" pattern="^(?=.*\d)(?=.{8,50})(?=.*[-+!*$@%_?,#'$:;/}{=][)(^])([-+!*$@%_?,#'$:;/}{=][)$" value="<?php echo $password_user; ?>">
+                                        <p class="messageError"><?php echo $passError; ?></p>
                                         <span id="msg"></span>
                                     </div>
-                                
-                                </div>
-
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    
-                                    <!-- bouton submit -->
-                                                                        
-                                    <button type="submit" name="submit" class="btn btn-primary" >S'inscire</button>
-                                                                        
                                 </div>
                                 
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    
-                                    <!-- message inscription -->
+                                <!-- bouton submit -->
                                 
-                                    <div class="messageInscription">
-                                        <h4>Déjà inscrit ? <a href="login.php">Connectez-vous ici</a></h4>
-                                    </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <button type="submit" name="submit" class="btn btn-primary" >S'inscrire</button>
+                                
+                                <!-- bouton retour -->
                                     
+                                    <button type="button" name="submit" class="btn btn-primary"><a href="login.php">Retour</a></button>
                                 </div>
                                 
                             </form>

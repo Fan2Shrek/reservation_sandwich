@@ -1,5 +1,7 @@
 <?php
 
+/* connexion en tant qu'élève ou administrateur */
+
 session_start();
 
 $_SESSION['ifco'] = false;
@@ -22,7 +24,7 @@ if (isset($_POST['submit']))
     $email = $_POST['email'];
     $password = $_POST['password'];
     
-    $password_user = password_hash($password, PASSWORD_ARGON2I , ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3]);
+    $password_user = password_hash($password, PASSWORD_ARGON2I);
 
     $query = $co->prepare('SELECT * FROM utilisateur WHERE email_user=:email');
     $query->bindParam(':email', $email);
@@ -35,6 +37,7 @@ if (isset($_POST['submit']))
     
     $nom = $temp['nom_user'];
     $prenom = $temp['prenom_user'];
+    $user_id = $temp['id_user'];
 
     $result = $query->fetch();
 
@@ -47,6 +50,8 @@ if (isset($_POST['submit']))
         $_SESSION['role'] = $role;
         
         $_SESSION['username'] = array($nom, $prenom);
+        
+        $_SESSION['user_id'] = $user_id;
 
         if($role == "e")
         {
@@ -108,7 +113,7 @@ if (isset($_POST['submit']))
                         
                         <div class="col-lg-12 col-md-12 col-sm-12">
                         
-                            <form class="form" method="post" name="login">
+                            <form class="form" method="post" name="login" id="loginform">
                                 
                                 <!-- email -->
 
@@ -161,11 +166,11 @@ if (isset($_POST['submit']))
                         <h4 class="txtInscription">Vous n'avez pas encore de compte ?</h4>
                         <h4 class="txtInscription">Inscrivez-vous dès maintenant !</h4>
 
-                        <!-- bouton s'inscire -->
+                        <!-- bouton s'inscrire -->
                         
                         <div class="btnInscription">
                             <a href="register.php">
-                                <button type="button" class="btn btn-primary">S'inscire</button>
+                                <button type="button" class="btn btn-primary">S'inscrire</button>
                             </a>
                         </div> 
                         

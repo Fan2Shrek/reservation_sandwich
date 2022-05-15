@@ -1,15 +1,15 @@
 <?php 
 
     #Lien de la BDD 
-    $dbHost = "localhost";
+    $dbHost = "mysql-lyceestvincent.alwaysdata.net";
 
     #Nom de la BDD
-    $dbName = "reservesandwich";
+    $dbName = "lyceestvincent_groupe4";
 
     #User login
-    $dbUser = 'root';
+    $dbUser = '116313_groupe4';
 
     #User password
-    $dbUserPw = "";
+    $dbUserPw = "superbola69";
 
 ?>
